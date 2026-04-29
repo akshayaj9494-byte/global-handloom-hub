@@ -1,24 +1,48 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Checkout({ cart }) {
   const [paymentMethod, setPaymentMethod] = useState("");
+  const navigate = useNavigate();
 
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cart.reduce(
+    (total, item) => total + Number(item.price),
+    0
+  );
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!paymentMethod) {
       alert("Please select a payment method");
       return;
     }
 
-    alert("Payment Successful! Order Placed 🎉");
+    try {
+      for (const item of cart) {
+        await fetch("http://localhost:8081/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productName: item.name,
+            price: item.price,
+          }),
+        });
+      }
+
+      alert("Order Placed Successfully 🎉");
+      navigate("/orders");
+    } catch (error) {
+      console.log(error);
+      alert("Order Failed ❌");
+    }
   };
 
   return (
     <div style={{ padding: "40px" }}>
       <h2>Checkout</h2>
 
-      <h3>Your Total: ₹{totalPrice}</h3>
+      <h3>Total: ₹{totalPrice}</h3>
 
       <div style={{ marginTop: "20px" }}>
         <h4>Select Payment Method:</h4>

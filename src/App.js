@@ -8,13 +8,13 @@ import Seller from "./pages/Seller";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import OrderHistory from "./pages/OrderHistory";
 
 function App() {
   const [cart, setCart] = useState([]);
 
-  // Add product to cart
   const addToCart = (product) => {
-    setCart([...cart, product]);
+    setCart((prevCart) => [...prevCart, product]);
   };
 
   return (
@@ -23,25 +23,12 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-
-        <Route
-          path="/products"
-          element={<Products addToCart={addToCart} />}
-        />
-
+        <Route path="/products" element={<Products addToCart={addToCart} />} />
         <Route path="/seller" element={<Seller />} />
-
         <Route path="/login" element={<Login />} />
-
-        <Route
-          path="/cart"
-          element={<Cart cart={cart} />}
-        />
-
-        <Route
-          path="/checkout"
-          element={<Checkout cart={cart} />}
-        />
+        <Route path="/cart" element={<Cart cart={cart} />} />
+        <Route path="/checkout" element={<Checkout cart={cart} />} />
+        <Route path="/orders" element={<OrderHistory />} />
       </Routes>
     </Router>
   );

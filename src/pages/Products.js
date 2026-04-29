@@ -1,40 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 function Products({ addToCart }) {
+  const [products, setProducts] = useState([]);
+  const location = useLocation();
 
-  const products = [
-    {
-      name: "Kanchipuram Silk Saree",
-      price: "12500",
-      image: "/saree1.jpg"
-    },
-    {
-      name: "Pochampally Ikat Saree",
-      price: "4800",
-      image: "/saree2.jpg"
-    },
-    {
-      name: "Cotton Handloom Saree",
-      price: "2400",
-      image: "/saree3.jpg"
-    },
-    {
-      name: "Banarasi Silk Saree",
-      price: "9800",
-      image: "/saree4.jpg"
-    },
-    {
-      name: "Khadi Kurta",
-      price: "2100",
-      image: "/kurta.jpg"
-    },
-    {
-      name: "Handloom Dupatta",
-      price: "1200",
-      image: "/dupatta.jpg"
-    }
+  const images = [
+    process.env.PUBLIC_URL + "/saree1.jpg",
+    process.env.PUBLIC_URL + "/saree2.jpg",
+    process.env.PUBLIC_URL + "/saree3.jpg",
+    process.env.PUBLIC_URL + "/saree4.jpg",
+    process.env.PUBLIC_URL + "/kurta.jpg",
+    process.env.PUBLIC_URL + "/dupatta.jpg"
   ];
+
+  const fetchProducts = () => {
+    fetch("http://localhost:8081/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [location]);
+
+  useEffect(() => {
+    const interval = setInterval(fetchProducts, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div style={{ padding: "30px" }}>
@@ -50,19 +44,21 @@ function Products({ addToCart }) {
 
       <div style={gridStyle}>
         {products.map((item, index) => (
-          <div key={index} style={cardStyle}>
+          <div key={item.id} style={cardStyle}>
             <img
-              src={item.image}
+              src={images[index % images.length]}
               alt={item.name}
               style={{
                 width: "100%",
                 height: "200px",
-                objectFit: "cover"
+                objectFit: "cover",
+                borderRadius: "8px"
               }}
             />
 
             <h3>{item.name}</h3>
-            <h4 style={{ color: "green" }}>{item.price}</h4>
+            <p>{item.description}</p>
+            <h4 style={{ color: "green" }}>₹ {item.price}</h4>
 
             <button
               style={addButton}
@@ -102,7 +98,7 @@ const addButton = {
 
 const cartButton = {
   padding: "10px 20px",
-  backgroundColor: "#008000",
+  backgroundColor: "green",
   color: "white",
   border: "none",
   borderRadius: "5px",

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ cartCount }) {
   return (
     <div style={navStyle}>
       <h2 style={{ color: "white" }}>Global Handloom Hub</h2>
@@ -9,8 +9,10 @@ function Navbar() {
       <div>
         <Link to="/" style={linkStyle}>Home</Link>
         <Link to="/products" style={linkStyle}>Products</Link>
-        <Link to="/cart" style={linkStyle}>Cart</Link>
-        <Link to="/seller" style={linkStyle}>Seller Login</Link>
+        <Link to="/login" style={linkStyle}>Login</Link>
+        <Link to="/orders" style={linkStyle}>Order History</Link>
+        <Link to="/cart" style={linkStyle}>Cart ({cartCount})</Link>
+        <Link to="/seller" style={linkStyle}>Seller</Link>
       </div>
     </div>
   );
